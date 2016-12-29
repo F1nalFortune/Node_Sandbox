@@ -1,22 +1,22 @@
 var express = require('express');
+var app = express();
 var fs = require('fs');
 var ejs = require('ejs');
-var app = express();
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/index.html');
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
-app.get('/products', function(request, response) {
+app.get('/products', function(req, res) {
   fs.readFile('products.json', 'utf8', function(err, data) {
     var products = JSON.parse(data);
-    response.locals = { products: products };
-    response.render('products.ejs');
+    res.locals = { products: products };
+    res.render('products.ejs');
   });
 });
-app.get('/products/:id', function(request, response) {
+app.get('/products/:id', function(req, res) {
   fs.readFile('products.json', 'utf8', function(err, data) {
     var productsParsed = JSON.parse(data);
     var product = productsParsed.filter( function(obj) {
-      return obj.id === parseInt(request.params.id);
+      return obj.id === parseInt(req.params.id);
     });
 
     if (product.length)
@@ -24,8 +24,8 @@ app.get('/products/:id', function(request, response) {
     else
       product = null;
 
-    response.locals = { product: product };
-    response.render('product.ejs');
+    res.locals = { product: product };
+    res.render('product.ejs');
   });
 });
 
